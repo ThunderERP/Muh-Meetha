@@ -1,0 +1,114 @@
+import { PrismaService } from '../prisma/prisma.service';
+import { SearchPaginationDto } from '../../common/dto/pagination.dto';
+import { CreateUserDto, UpdateUserDto, UpdateMeDto } from './dto/users.dto';
+import { ConfigService } from '@nestjs/config';
+export declare class UsersService {
+    private readonly prisma;
+    private readonly config;
+    private readonly bcryptRounds;
+    constructor(prisma: PrismaService, config: ConfigService);
+    findAll(tenantId: number, dto: SearchPaginationDto): Promise<import("../../common/dto/pagination.dto").PaginatedResult<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>>;
+    findOne(id: number, tenantId: number): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+    getMe(userId: number): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+    create(tenantId: number, dto: CreateUserDto, createdBy: number): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+    updateMe(userId: number, tenantId: number, dto: UpdateMeDto): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+    update(id: number, tenantId: number, requesterId: number, dto: UpdateUserDto): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+    deactivate(id: number, tenantId: number, requesterId: number): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+    activate(id: number, tenantId: number, requesterId: number): Promise<{
+        id: number;
+        name: string;
+        isActive: boolean;
+        phone: string | null;
+        email: string;
+        createdAt: Date;
+        updatedAt: Date;
+        tenantId: number;
+        role: import(".prisma/client").$Enums.Role;
+        jobTitle: string | null;
+        avatarUrl: string | null;
+    }>;
+}
