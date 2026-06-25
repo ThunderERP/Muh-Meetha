@@ -22,9 +22,11 @@ export function useSignedUrl(storageKey: string | null | undefined) {
     queryKey:  ['signed-url', storageKey],
     queryFn:   () => get<SignedUrlResponse>('/uploads/signed-url', { key: storageKey! }),
     enabled:   !!storageKey,
-    // Cache for 12 min — signed URLs last 15 min, so we refetch with 3 min headroom
+    // staleTime 12 min: refetch before the 15-min signed URL expires (3 min headroom)
+    // gcTime   16 min: keep in cache after going stale so a background refetch can replace it
+    //                   before it's garbage-collected; prevents a visible 403 on long sessions
     staleTime: 12 * 60 * 1000,
-    gcTime:    14 * 60 * 1000,
+    gcTime:    16 * 60 * 1000,
     retry:     1,
   })
 

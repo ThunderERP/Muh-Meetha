@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=20.0.0 <23.0.0"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "build": "nest build",
     "start": "prisma generate && node dist/main",

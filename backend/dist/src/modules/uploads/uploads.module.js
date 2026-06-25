@@ -155,7 +155,6 @@ const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const swagger_2 = require("@nestjs/swagger");
 const auth_decorators_1 = require("../../common/decorators/auth.decorators");
-const ALLOWED_ENTITY_TYPES = ['PRODUCT', 'SUPPLIER', 'USER', 'COMPANY'];
 class UploadMetaDto {
 }
 __decorate([

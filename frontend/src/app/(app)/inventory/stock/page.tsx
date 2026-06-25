@@ -18,18 +18,30 @@ import { TableSkeleton } from '@/components/shared/loading'
 import { formatCurrency, formatNumber, formatDate, getStockStatus, permissions } from '@/lib/utils'
 import { Product, StockMovementType } from '@/types'
 
-// Matches backend AdjustStockDto: quantity must be positive int, type is IsIn-checked
+// Matches backend AdjustStockDto.
+// INWARD/OUTWARD/RESERVATION: positive integer only.
+// ADJUSTMENT: signed integer (positive adds stock, negative removes it).
 const adjustSchema = z.object({
   type: z.enum(['INWARD', 'OUTWARD', 'ADJUSTMENT']),
-  quantity: z.number({ invalid_type_error: 'Quantity is required' }).int().positive('Must be a positive whole number'),
+  quantity: z.number({ invalid_type_error: 'Quantity is required' }).int(),
   notes: z.string().optional(),
+}).superRefine((val, ctx) => {
+  if (val.type === 'ADJUSTMENT') {
+    if (val.quantity === 0) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Quantity cannot be zero', path: ['quantity'] })
+    }
+  } else {
+    if (val.quantity <= 0) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Must be a positive whole number', path: ['quantity'] })
+    }
+  }
 })
 type AdjustForm = z.infer<typeof adjustSchema>
 
 const ADJUST_TYPES: { value: StockMovementType; label: string; icon: React.ElementType; variant: 'success' | 'danger' | 'warning'; hint: string }[] = [
   { value: 'INWARD', label: 'Stock In', icon: ArrowUpCircle, variant: 'success', hint: 'Adds quantity to current stock' },
   { value: 'OUTWARD', label: 'Stock Out', icon: ArrowDownCircle, variant: 'danger', hint: 'Removes quantity from current stock' },
-  { value: 'ADJUSTMENT', label: 'Adjustment', icon: SlidersHorizontal, variant: 'warning', hint: 'Adds (use negative-equivalent via Stock Out for reductions)' },
+  { value: 'ADJUSTMENT', label: 'Adjustment', icon: SlidersHorizontal, variant: 'warning', hint: 'Manual correction — positive adds, negative removes (e.g. shrinkage, write-off)' },
 ]
 
 const ADJUSTMENT_REASONS = ['Damaged Goods', 'Expired Stock', 'Theft / Loss', 'Reconciliation', 'Sample / Internal Use', 'Return from Customer', 'Other']
@@ -212,7 +224,14 @@ export default function StockManagementPage() {
 
             <div>
               <label className="erp-label">Quantity *</label>
-              <input type="number" min="1" {...register('quantity', { valueAsNumber: true })} placeholder="Enter quantity" className={`erp-input text-lg font-semibold ${errors.quantity ? 'border-danger' : ''}`} />
+              <input
+                type="number"
+                min={selectedType === 'ADJUSTMENT' ? undefined : 1}
+                step={1}
+                {...register('quantity', { valueAsNumber: true })}
+                placeholder={selectedType === 'ADJUSTMENT' ? 'e.g. -5 or +10' : 'Enter quantity'}
+                className={`erp-input text-lg font-semibold ${errors.quantity ? 'border-danger' : ''}`}
+              />
               {errors.quantity && <p className="mt-1 text-xs text-danger">{errors.quantity.message}</p>}
             </div>
 

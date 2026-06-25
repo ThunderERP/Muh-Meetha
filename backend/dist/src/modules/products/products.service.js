@@ -219,8 +219,8 @@ let ProductsService = class ProductsService {
             this.prisma.product.groupBy({
                 by: ['category'],
                 where: { tenantId, deletedAt: null, isActive: true },
-                _count: { _all: true },
-                orderBy: { _count: { category: 'desc' } },
+                _count: true,
+                orderBy: { _count: { id: 'desc' } },
             }),
         ]);
         const allInventory = await this.prisma.product.findMany({
@@ -260,7 +260,7 @@ let ProductsService = class ProductsService {
             recentMovements,
             topCategories: categories.map((c) => ({
                 category: c.category ?? 'Uncategorised',
-                count: c._count?._all ?? 0,
+                count: c._count,
                 value: 0,
             })),
             stockAlerts: stockAlerts.slice(0, 20),

@@ -114,11 +114,21 @@ export const inventoryApi = {
       movement: StockMovement
     }>(`/inventory/${productId}/adjust`, data),
 
-  history: (productId: number, page = 1, limit = 20) =>
-    get<PaginatedResponse<StockMovement>>(`/inventory/${productId}/history`, { page, limit }),
+  // params object so call sites don't have to remember positional args
+  history: (productId: number, params: { page?: number; limit?: number } = {}) =>
+    get<PaginatedResponse<StockMovement>>(`/inventory/${productId}/history`, {
+      page:  params.page  ?? 1,
+      limit: params.limit ?? 20,
+    }),
 
   reorderAlerts: (page = 1, limit = 25) =>
     get<PaginatedResponse<Product>>('/reorder-alerts', { page, limit }),
+}
+
+// Named export used by reorder-alerts/page.tsx
+export const reorderAlertsApi = {
+  list: (params: { page?: number; limit?: number } = {}) =>
+    inventoryApi.reorderAlerts(params.page ?? 1, params.limit ?? 25),
 }
 
 // ─── Suppliers ────────────────────────────────────────────────────────────────

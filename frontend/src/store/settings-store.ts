@@ -4,16 +4,16 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { UserSettings } from '@/types'
 
+// Mirrors backend UpdateUserSettingsDto exactly.
+// language, currency, notifyReturns are intentionally absent — the backend
+// strips them via whitelist validation and they are never persisted.
 const DEFAULTS: UserSettings = {
   theme: 'light',
-  language: 'en',
   dateFormat: 'DD/MM/YYYY',
-  currency: 'INR',
   timezone: 'Asia/Kolkata',
   notifyOrderUpdates: true,
   notifyLowStock: true,
   notifyPayments: true,
-  notifyReturns: true,
   sidebarCollapsed: false,
   invShowSku: true,
   invShowGst: true,

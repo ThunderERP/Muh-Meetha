@@ -1,4 +1,4 @@
-// File: D:\Thunder ERP\mooh meetha\June\frontend\src\app\(auth)\layout.tsx
+// File: D:\Thunder ERP\mooh meetha\git\Muh-Meetha\frontend\src\app\(auth)\layout.tsx
 import * as entry from '../../../../src/app/(auth)/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

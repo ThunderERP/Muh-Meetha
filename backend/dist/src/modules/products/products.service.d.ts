@@ -177,7 +177,33 @@ export declare class ProductsService {
         })[];
         topCategories: {
             category: string;
-            count: any;
+            count: true | {
+                id?: number | undefined;
+                tenantId?: number | undefined;
+                name?: number | undefined;
+                sku?: number | undefined;
+                barcode?: number | undefined;
+                category?: number | undefined;
+                subcategory?: number | undefined;
+                brand?: number | undefined;
+                unit?: number | undefined;
+                hsn?: number | undefined;
+                price?: number | undefined;
+                purchasePrice?: number | undefined;
+                gstPercentage?: number | undefined;
+                discountPercentage?: number | undefined;
+                description?: number | undefined;
+                expiryDate?: number | undefined;
+                manufacturingDate?: number | undefined;
+                imageUrl?: number | undefined;
+                isActive?: number | undefined;
+                deletedAt?: number | undefined;
+                createdAt?: number | undefined;
+                updatedAt?: number | undefined;
+                createdBy?: number | undefined;
+                updatedBy?: number | undefined;
+                _all?: number | undefined;
+            } | undefined;
             value: number;
         }[];
         stockAlerts: ({

@@ -8,6 +8,24 @@ import { PageHeader } from '@/components/shared/page-header'
 import { StatCardSkeleton } from '@/components/shared/loading'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 import { Product } from '@/types'
+import apiClient from '@/lib/api-client'
+
+/**
+ * Download CSV via the authenticated axios client so the Authorization header
+ * is included. window.open / bare <a href> strips headers and gets a 401.
+ */
+async function downloadProductsCsv() {
+  const response = await apiClient.get('/products/export/csv', { responseType: 'blob' })
+  const blob = new Blob([response.data], { type: 'text/csv' })
+  const url  = URL.createObjectURL(blob)
+  const a    = document.createElement('a')
+  a.href     = url
+  a.download = `thundererp-products-${new Date().toISOString().slice(0, 10)}.csv`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 
 const CHART_COLORS = ['#2563EB', '#16A34A', '#D97706', '#DC2626', '#0EA5E9', '#7C3AED', '#DB2777', '#059669']
 
@@ -43,9 +61,13 @@ export default function InventoryReportsPage() {
     { name: 'Out of Stock', value: outStockCount, color: '#DC2626' },
   ].filter((d) => d.value > 0)
 
-  const handleExportCSV = () => {
-    // Use the actual backend export endpoint
-    window.open(productsApi.exportCsvUrl(), '_blank')
+  const handleExportCSV = async () => {
+    try {
+      await downloadProductsCsv()
+    } catch {
+      // toast not imported in this page — use console for now; add sonner if desired
+      console.error('CSV export failed')
+    }
   }
 
   const kpis = [

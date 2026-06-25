@@ -39,13 +39,13 @@ let UsersController = class UsersController {
         return this.usersService.create(user.tenantId, dto, user.id);
     }
     update(id, user, dto) {
-        return this.usersService.update(id, user.tenantId, dto);
+        return this.usersService.update(id, user.tenantId, user.id, dto);
     }
     deactivate(id, user) {
         return this.usersService.deactivate(id, user.tenantId, user.id);
     }
     activate(id, user) {
-        return this.usersService.activate(id, user.tenantId);
+        return this.usersService.activate(id, user.tenantId, user.id);
     }
 };
 exports.UsersController = UsersController;

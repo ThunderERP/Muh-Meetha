@@ -225,7 +225,7 @@ import { RequestUser } from '../auth/auth.types';
 class UploadMetaDto {
   @ApiProperty({ enum: ALLOWED_ENTITY_TYPES })
   @IsString()
-  @IsIn(ALLOWED_ENTITY_TYPES)
+  @IsIn([...ALLOWED_ENTITY_TYPES])   // spread converts readonly tuple → plain string[] that @IsIn accepts
   entityType: string;
 
   @ApiProperty()
