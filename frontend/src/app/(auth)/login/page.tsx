@@ -45,6 +45,7 @@ export default function LoginPage() {
     try {
       const res = await authApi.login(data);
       setAuth(res.user, res.tenant, res.accessToken);
+      // Signal cookie for Edge middleware — carries no sensitive data
       document.cookie =
         "thundererp_auth_token=1; path=/; max-age=604800; SameSite=Lax";
       try {
