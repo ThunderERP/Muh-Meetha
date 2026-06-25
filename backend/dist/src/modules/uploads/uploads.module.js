@@ -160,7 +160,7 @@ class UploadMetaDto {
 __decorate([
     (0, swagger_2.ApiProperty)({ enum: ALLOWED_ENTITY_TYPES }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsIn)(ALLOWED_ENTITY_TYPES),
+    (0, class_validator_1.IsIn)([...ALLOWED_ENTITY_TYPES]),
     __metadata("design:type", String)
 ], UploadMetaDto.prototype, "entityType", void 0);
 __decorate([

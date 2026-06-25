@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "nest build",
-    "start": "prisma generate && node dist/main",
+    "start": "prisma generate && node dist/src/main.js",
     "postinstall": "prisma generate",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
