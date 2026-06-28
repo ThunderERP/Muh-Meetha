@@ -23,8 +23,37 @@ async function bootstrap() {
   app.use(compression());
 
   // ─── CORS ─────────────────────────────────────────────────────────────────
+  // Allow the configured production frontend URL, any extra origins listed in
+  // ALLOWED_ORIGINS (comma-separated), and — since Vercel preview deployments
+  // get a new random subdomain on every push — any *.vercel.app origin too.
+  // This avoids having to update FRONTEND_URL on every single deploy.
+  const staticAllowedOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'http://localhost:3000',
+    ...(process.env.ALLOWED_ORIGINS?.split(',').map((o) => o.trim()).filter(Boolean) || []),
+  ];
+
+  const isVercelPreviewOrigin = (origin: string): boolean => {
+    try {
+      const { hostname, protocol } = new URL(origin);
+      return protocol === 'https:' && hostname.endsWith('.vercel.app');
+    } catch {
+      return false;
+    }
+  };
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // No origin header (e.g. curl, server-to-server, same-origin) — allow.
+      if (!origin) return callback(null, true);
+
+      if (staticAllowedOrigins.includes(origin) || isVercelPreviewOrigin(origin)) {
+        return callback(null, true);
+      }
+
+      logger.warn(`Blocked CORS request from disallowed origin: ${origin}`);
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-ID', 'X-Request-ID'],
